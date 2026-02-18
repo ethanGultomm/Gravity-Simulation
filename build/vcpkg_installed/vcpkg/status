@@ -1,0 +1,34 @@
+Package: vcpkg-cmake-config
+Version: 2024-05-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: e6386b566fdabc5dfceded498515314704d8b71bbe287c2f2e2ad084946094e8
+Status: install ok installed
+
+Package: vcpkg-cmake
+Version: 2024-04-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 8f1f13ac30b63da2930f6ef9c52befdc11fbe245c586212fcffaa688e6dc194b
+Status: install ok installed
+
+Package: glfw3
+Version: 3.4
+Port-Version: 1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: f62da8b8391a3166f6611139c3eefda4efb4015668a0b6108ca55115ef8050c9
+Description: GLFW is a free, Open Source, multi-platform library for OpenGL, OpenGL ES and Vulkan application development. It provides a simple, platform-independent API for creating windows, contexts and surfaces, reading input, handling events, etc.
+Status: install ok installed
+
+Package: glm
+Version: 1.0.1
+Port-Version: 3
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 52920e7bbb4d3c9bd1763dee28016cd3ed623bf5add2bf09a6309c5a68aabcbc
+Description: OpenGL Mathematics (GLM)
+Status: install ok installed
+
