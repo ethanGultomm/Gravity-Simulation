@@ -58,6 +58,13 @@ build CMakeFiles/2Dsim.dir/src/glad.c.obj: C_COMPILER__2Dsim_unscanned_ D$:/Etha
   OBJECT_DIR = CMakeFiles\2Dsim.dir
   OBJECT_FILE_DIR = CMakeFiles\2Dsim.dir\src
 
+build CMakeFiles/2Dsim.dir/src/circle.cpp.obj: CXX_COMPILER__2Dsim_unscanned_ D$:/Ethan/PersonalProject/Gravity-Simulation/src/circle.cpp || cmake_object_order_depends_target_2Dsim
+  DEFINES = -DGLFW_DLL
+  DEP_FILE = CMakeFiles\2Dsim.dir\src\circle.cpp.obj.d
+  INCLUDES = -ID:/Ethan/PersonalProject/Gravity-Simulation/src -isystem D:/Ethan/PersonalProject/Gravity-Simulation/build/vcpkg_installed/x64-windows/include
+  OBJECT_DIR = CMakeFiles\2Dsim.dir
+  OBJECT_FILE_DIR = CMakeFiles\2Dsim.dir\src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target 2Dsim
@@ -66,7 +73,7 @@ build CMakeFiles/2Dsim.dir/src/glad.c.obj: C_COMPILER__2Dsim_unscanned_ D$:/Etha
 #############################################
 # Link the executable 2Dsim.exe
 
-build 2Dsim.exe: CXX_EXECUTABLE_LINKER__2Dsim_ CMakeFiles/2Dsim.dir/src/GravitySim.cpp.obj CMakeFiles/2Dsim.dir/src/glad.c.obj | vcpkg_installed/x64-windows/debug/lib/glfw3dll.lib vcpkg_installed/x64-windows/debug/lib/glm.lib
+build 2Dsim.exe: CXX_EXECUTABLE_LINKER__2Dsim_ CMakeFiles/2Dsim.dir/src/GravitySim.cpp.obj CMakeFiles/2Dsim.dir/src/glad.c.obj CMakeFiles/2Dsim.dir/src/circle.cpp.obj | vcpkg_installed/x64-windows/debug/lib/glfw3dll.lib vcpkg_installed/x64-windows/debug/lib/glm.lib
   LINK_LIBRARIES = vcpkg_installed/x64-windows/debug/lib/glfw3dll.lib  vcpkg_installed/x64-windows/debug/lib/glm.lib  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\2Dsim.dir
   POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D D:\Ethan\PersonalProject\Gravity-Simulation\build && C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary D:/Ethan/PersonalProject/Gravity-Simulation/build/2Dsim.exe -installedDir D:/Ethan/PersonalProject/Gravity-Simulation/build/vcpkg_installed/x64-windows/bin -OutVariable out"

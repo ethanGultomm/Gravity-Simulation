@@ -9,7 +9,7 @@ find_package(glm CONFIG REQUIRED)
 
 set(DEPS glfw glm::glm)
 
-add_executable(${TargetName} src/GravitySim.cpp src/glad.c)
+add_executable(${TargetName} src/GravitySim.cpp src/glad.c src/circle.cpp)
 
 target_link_libraries(${TargetName} PRIVATE ${DEPS})
 target_include_directories(${TargetName} PRIVATE src)

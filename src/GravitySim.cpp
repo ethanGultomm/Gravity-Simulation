@@ -7,6 +7,8 @@
 #include <vector>
 #include <stdlib.h>
 #include <cmath>
+
+#include "circle.h"
 using namespace std;;
 
 const char* vertexShaderSource = "#version 330 core\n"
@@ -57,42 +59,14 @@ int main(){
     }
     glfwSwapInterval(1);
 
-    // vertices for a right triangle
-    GLfloat vertices[] = 
-    {
-        0.0f, 0.0f, 0.0f,
-        0.5f, 0.0f, 0.0f,
-        0.0f, 0.5f, 0.0f
-    };
-
     // draw a circle with a given resolution
     int const res = 50;
-    std::vector<GLfloat> center = {0.0f, 0.0f, 0.0f};
+    std::vector<GLfloat> center = {0.0f, 0.5f, 0.0f};
     GLfloat radius = 0.3f;
 
-    GLfloat circleVertices[(res+1)*3];
-    circleVertices[0] = center[0];
-    circleVertices[1] = center[1];
-    circleVertices[2] = center[2];
-    GLuint indices[res*3];
-
-    for (size_t i = 0; i < res; i++)
-    {
-        // calculate the next vertex with trigonometry
-        GLfloat angle = 2.0f * 3.14159265359 * (static_cast<float>(i) / res);
-        GLfloat x = center[0] + cos(angle) * radius;
-        GLfloat y = center[1] + sin(angle) * radius;
-        // save the vertex, its i+1 because index 0 is already used by the center point
-        circleVertices[(i+1)*3] = x;
-        circleVertices[((i+1)*3)+1] = y;
-        circleVertices[((i+1)*3)+2] = 0.0f; // since we're working with 2d, Z axis stays at 0
-
-        // make the indices, look at sketch.jpg for uhh some kinda explanation lol
-        indices[i*3]     = 0;   // indice a
-        indices[(i*3)+1] = i+1; // indice b
-        indices[(i*3)+2] = i+2; // indice c
-    }
-    indices[(res*3)-1] = 1; // connects the last triangle to the first vertex
+    // creating the circle object
+    Circle ballknowledge(radius, center[0], center[1], res);
+    ballknowledge.generateVertices();
 
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -120,10 +94,10 @@ int main(){
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(circleVertices), circleVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, ballknowledge.vertices.size() * sizeof(GLfloat), ballknowledge.vertices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, ballknowledge.indices.size() * sizeof(GLuint), ballknowledge.indices.data(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
