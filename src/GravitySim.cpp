@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <cmath>
 
-#include "circle.h"
+#include <world.h>
 using namespace std;
 
 static void error_callback(int error, const char* description){
@@ -25,9 +25,11 @@ void processInput(GLFWwindow* window){
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
     // update projection
-    Circle* c = static_cast<Circle*>(glfwGetWindowUserPointer(window));
-    if(c)
-        c->setProjection((float)width, (float)height);
+    auto* world = static_cast<World*>(glfwGetWindowUserPointer(window));
+
+    if(world){
+        world->setProjection((float)width, (float)height);
+    }
 }
 
 int main(){
@@ -61,36 +63,39 @@ int main(){
     glViewport(0, 0, windowWidth, windowHeight);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // draw a circle with a given resolution
+    // the circles parameters
     int const res = 50;
-    std::vector<GLfloat> center = {0.0f, 0.0f, 0.0f};
     GLfloat radius = 30.0f;    // value in pixels
     radius = radius / (windowHeight / 2);   //convert to absolute value (0.0 - 1.0)
 
-    // creating the circle object
-    Circle ballknowledge(radius, center[0], center[1], res);
-    ballknowledge.setProjection(windowWidth, windowHeight);
-    glfwSetWindowUserPointer(window, &ballknowledge);
+    // creating one ball
+    World world;
+    glfwSetWindowUserPointer(window, &world);
+
+    // add one circle object to balls, this will be the one that moves
+    world.addCircle(radius, 0.0f, 0.0f, res, windowWidth, windowHeight);
 
     double prevTime = glfwGetTime();
     const double frameTime = 1.0 / 60;  // 60hz
-
-    // MAIN RENDER LOOP
+    int ballsCount = 0;
+    std::vector<GLfloat> spawnCenter = {-0.5f, 0.5f};
+    // MAIN LOOP
     while (!glfwWindowShouldClose(window)){
         // input
         processInput(window);
         // render commands here
         glClearColor(0.12f, 0.12f, 0.12f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        
-        double currentTime = glfwGetTime();
-        if(currentTime - prevTime >= frameTime){
-            //center[0] += 0.001f;
-            //center[1] += 0.002;
-            prevTime += frameTime;
-        }
 
-        ballknowledge.draw(center[0], center[1]);
+        // create 5 balls and put them all in the balls vector
+        if(ballsCount < 5){
+            world.addCircle(radius, spawnCenter[0], spawnCenter[1], res, windowWidth, windowHeight);
+            spawnCenter[0] += 0.2;
+            ballsCount++;
+        }
+        world.update(1.0f);
+        world.render();
+
 
         // check and call events and swap the buffers
         glfwSwapBuffers(window);
@@ -101,3 +106,6 @@ int main(){
     glfwTerminate();
     exit(EXIT_FAILURE);
 }
+
+// TODO: 
+// -create a physics module that will contain all phyics

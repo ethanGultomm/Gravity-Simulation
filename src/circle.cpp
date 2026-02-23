@@ -1,9 +1,9 @@
 #include "circle.h"
+#include "glad/glad.h"
+#include <GLFW/glfw3.h>
 
-Circle::Circle(GLfloat radius, GLfloat x, GLfloat y, int res){
+Circle::Circle(float radius, int res){
     this->radius = radius;
-    this->x = x;
-    this->y = y;
     this->res = res;
 
     // configure the shader
@@ -46,10 +46,10 @@ void Circle::init(){
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -69,9 +69,9 @@ void Circle::generateVertices(){
     for (size_t i = 0; i < res; i++)
     {
         // calculate the next vertex with trigonometry
-        GLfloat angle = 2.0f * 3.14159265359 * (static_cast<float>(i) / res);
-        GLfloat xVertex = cos(angle) * radius;
-        GLfloat yVertex = sin(angle) * radius;
+        float angle = 2.0f * 3.14159265359 * (static_cast<float>(i) / res);
+        float xVertex = cos(angle) * radius;
+        float yVertex = sin(angle) * radius;
         // save the vertex
         vertices.push_back(xVertex);
         vertices.push_back(yVertex);
@@ -85,14 +85,12 @@ void Circle::generateVertices(){
     indices.back() = 1; // connects the last triangle to the first generated vertex
 }
 
-void Circle::draw(GLfloat newX, GLfloat newY){
-    // set the new center
-    x = newX;
-    y = newY;
+// draw the vertices with it's current position in mind
+void Circle::draw(const glm::vec2& position){
     glUseProgram(shaderProgram);
 
     // create model matrix (move circle)
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(position.x, position.y, 0.0f));
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
     glBindVertexArray(VAO);

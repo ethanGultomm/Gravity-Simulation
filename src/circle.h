@@ -1,18 +1,18 @@
+#pragma once
 #include <vector>
 #include <stdlib.h>
 #include <cmath>
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-class Circle {
+#include <shape.h>
+
+class Circle : public Shape{
   private:
-    GLfloat radius, x, y;
     int res;
-    std::vector<GLfloat> vertices;
-    std::vector<GLuint> indices;
-    GLuint VAO, VBO, EBO, shaderProgram, modelLoc, projLoc;
+    std::vector<float> vertices;
+    std::vector<uint32_t>indices;
+    uint32_t VAO, VBO, EBO, shaderProgram, modelLoc, projLoc;
     const char* vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "uniform mat4 model;\n"
@@ -29,10 +29,11 @@ class Circle {
     "}\n\0";
 
   public:
-    Circle(GLfloat radius, GLfloat x, GLfloat y, int res);
-    ~Circle();
+    float radius;
+    Circle(float radius, int res);
+    ~Circle() override;
     void init();
     void generateVertices();
-    void draw(GLfloat newX, GLfloat newY);
-    void setProjection(float width, float height);
+    void draw(const glm::vec2& position) override;
+    void setProjection(float width, float height) override;
 };
