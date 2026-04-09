@@ -85,7 +85,7 @@ void Circle::generateVertices(){
     indices.back() = 1; // connects the last triangle to the first generated vertex
 }
 
-// draw the vertices with it's current position in mind
+// draw the circle with a set position
 void Circle::draw(const glm::vec2& position){
     glUseProgram(shaderProgram);
 

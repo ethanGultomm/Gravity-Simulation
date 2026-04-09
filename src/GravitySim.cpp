@@ -42,8 +42,8 @@ int main(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLfloat windowWidth = 1000.0f;
-    GLfloat windowHeight = 800.0f;
+    GLfloat windowWidth = 1300.0f;
+    GLfloat windowHeight = 1000.0f;
 
     GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "cock-and-ball-inator 3000", NULL, NULL);
     if (!window){
@@ -65,7 +65,7 @@ int main(){
 
     // the circles parameters
     int const res = 50;
-    GLfloat radius = 30.0f;    // value in pixels
+    GLfloat radius = 20.0f;    // value in pixels
     radius = radius / (windowHeight / 2);   //convert to absolute value (0.0 - 1.0)
 
     // creating one ball
@@ -73,33 +73,51 @@ int main(){
     glfwSetWindowUserPointer(window, &world);
 
     // add one circle object to balls, this will be the one that moves
-    world.addCircle(radius, 0.0f, 0.0f, res, windowWidth, windowHeight);
+    // world.addCircle(radius, 0.0f, 0.0f, res, windowWidth, windowHeight, glm::vec2(0.01f, 0.05f));
 
     double prevTime = glfwGetTime();
     const double frameTime = 1.0 / 60;  // 60hz
     int ballsCount = 0;
-    std::vector<GLfloat> spawnCenter = {-0.5f, 0.5f};
+    int frameCount = 0;
+    int angleCount = 0;
     // MAIN LOOP
     while (!glfwWindowShouldClose(window)){
         // input
         processInput(window);
-        // render commands here
-        glClearColor(0.12f, 0.12f, 0.12f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         // create 5 balls and put them all in the balls vector
-        if(ballsCount < 5){
-            world.addCircle(radius, spawnCenter[0], spawnCenter[1], res, windowWidth, windowHeight);
-            spawnCenter[0] += 0.2;
-            ballsCount++;
+        // if(ballsCount < 5){
+        //     world.addCircle(radius, spawnCenter[0], spawnCenter[1], res, windowWidth, windowHeight, glm::vec2(0.0f, 0.0f));
+        //     spawnCenter[0] += 0.2;
+        //     ballsCount++;
+        // }
+
+        double currentTime = glfwGetTime();
+        // updates eevery frameTime
+        if ((currentTime - prevTime) >= frameTime){
+            // render commands here
+            glClearColor(0.12f, 0.12f, 0.12f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            if(frameCount == 4){
+                glm::vec2 velocity;
+                float angle = 2.0f * 3.14159265359 * (static_cast<float>(angleCount) / 30);
+                velocity.x = cos(angle) * 0.04;
+                velocity.y = sin(angle) * 0.04;
+                world.addCircle(radius, 0.0f, 0.0f, res, windowWidth, windowHeight, velocity);
+                angleCount++;
+                frameCount = 0;
+            }
+            
+            world.update(frameTime);
+            world.render();
+            prevTime = glfwGetTime();
+
+            // check and call events and swap the buffers
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+            frameCount++;
         }
-        world.update(1.0f);
-        world.render();
-
-
-        // check and call events and swap the buffers
-        glfwSwapBuffers(window);
-        glfwPollEvents();
     }
 
     glfwDestroyWindow(window);
